@@ -11003,6 +11003,7 @@ const ticket_data = [
 
 let count=0;
 
+//class to hold and compute ticket statistics
 class Team {
 	team_name: string;
 	total_time: number;
@@ -11050,6 +11051,7 @@ class Team {
 	}
 }
 
+//An array holding the stats with one record per team
 var teams:Array<Team>;
 
 function exists_team_name(teamname:string) {
@@ -11061,20 +11063,20 @@ function exists_team_name(teamname:string) {
 	return null;
 }
 
+//Check if a team exists, if it does, update the corresponding record
 for(let ticket of ticket_data) {
 	if(teams && exists_team_name(ticket["assigned_team"])) {
 		let current_team=exists_team_name(ticket["assigned_team"]);
 		current_team.add(parseInt(ticket["time_to_resolve"]),
 			parseInt(ticket["customer_satisfaction_rating"]));
 	}
-	else {
+	else { //else insert a new record for the team
 		teams = new Array<Team>(new Team(ticket["assigned_team"],parseInt(ticket["time_to_resolve"]),
 			parseInt(ticket["customer_satisfaction_rating"])))
-		//teams.push(new Team(ticket["assigned_team"],parseInt(ticket["time_to_resolve"]),
-		//	parseInt(ticket["customer_satisfaction_rating"])));
 	}
 }
 
+//Generate HTML for message body
 let out_table = "<html><head>"
 out_table += "<style>"
 out_table += "table, th, td { border: 1px solid black; border-collapse: collapse; text-align: left; padding: 5px;}"
@@ -11095,15 +11097,10 @@ for(let this_team of teams) {
 	out_table += "<td>" + this_team.max_time + "</td>"
 	out_table += "<td>" + average_sat.toFixed(2) + "</td>"
 	out_table += "</tr>"
-//	console.log(team.team_name + " team handled " + team.count + " tickets.");
-//	console.log("The fastest ticket was completed in " + team.min_time +
-//		" and the slowest took " + team.max_time + ".");
-//	console.log("Average time: " + average_time.toFixed(2) +
-//		" with an average satisfaction of " + average_sat.toFixed(2) + ".\n");
 }
-
 out_table+="</table></body></html>"
 
+//Build JSON email message structure
 const email_message = {
 	"Messages" :[{
 		"From": {Email: "stats@example.com", Name: "Performance Stats Department"},
@@ -11113,4 +11110,5 @@ const email_message = {
 	}]
 }
 
+//Output final email message JSON
 console.log(JSON.stringify(email_message))

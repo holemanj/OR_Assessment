@@ -1,13 +1,17 @@
+//Read input file and parse from JSON
+//TODO: Add error exception handling for when JSON parsing fails
 const fs=require("fs")
 
 fs.readFile("./TypeScript_Source_Data.txt", function(err,data) {
 	processInput(JSON.parse(data));
 })
 
+//encapsulate script as a function with the parsed JSON as argument
 function processInput(ticket_data) {
 	let count=0;
 	let teams=[];
 
+	//Holds data and computes statistics for one team
 	class Team {
 		constructor(team_name,time,satisfaction) {
 			this.total_time = time;
@@ -46,6 +50,7 @@ function processInput(ticket_data) {
 		}
 	}
 
+	//Check if a team with the given team name exists
 	function exists_team_name(teamname) {
 		for(team of teams) {
 			if(team.check_name(teamname)) {
@@ -56,17 +61,19 @@ function processInput(ticket_data) {
 	}
 
 	for(ticket of ticket_data) {
+		//if team is already in list, update data
 		if(exists_team_name(ticket["assigned_team"])) {
 			let team=exists_team_name(ticket["assigned_team"]);
 			team.add(parseInt(ticket["time_to_resolve"]),
 				parseInt(ticket["customer_satisfaction_rating"]));
 		}
-		else {
+		else { //otherwise add a new team
 			teams.push(new Team(ticket["assigned_team"],parseInt(ticket["time_to_resolve"]),
 				parseInt(ticket["customer_satisfaction_rating"])));
 		}
 	}
 
+	//Generate output message HTML
 	let out_table = "<html><head>"
 	out_table += "<style>"
 	out_table += "table, th, td { border: 1px solid black; border-collapse: collapse; text-align: left; padding: 5px;}"
@@ -97,6 +104,7 @@ function processInput(ticket_data) {
 
 	out_table+="</table></body></html>"
 
+	//Construct email structure
 	const email_message = {
 		"Messages" :[{
 			"From": {Email: "stats@example.com", Name: "Performance Stats Department"},
@@ -106,5 +114,6 @@ function processInput(ticket_data) {
 		}]
 	}
 
+	//output the final email block
 	console.log(JSON.stringify(email_message))
 }

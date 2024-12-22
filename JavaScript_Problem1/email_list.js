@@ -1,3 +1,4 @@
+//Provided data
 const ticket_data = [
     {
         "ticket_id":  "1",
@@ -11002,9 +11003,9 @@ const ticket_data = [
 ];
 
 let count=0;
-
 let teams=[];
 
+//To hold values and compute statistics for each team
 class Team {
 	constructor(team_name,time,satisfaction) {
 		this.total_time = time;
@@ -11043,6 +11044,7 @@ class Team {
 	}
 }
 
+//Determine if a named team already exists in the list
 function exists_team_name(teamname) {
 	for(team of teams) {
 		if(team.check_name(teamname)) {
@@ -11053,17 +11055,19 @@ function exists_team_name(teamname) {
 }
 
 for(ticket of ticket_data) {
+	//Check if current team is already in the list, and update it if it is
 	if(exists_team_name(ticket["assigned_team"])) {
 		let team=exists_team_name(ticket["assigned_team"]);
 		team.add(parseInt(ticket["time_to_resolve"]),
 			parseInt(ticket["customer_satisfaction_rating"]));
 	}
-	else {
+	else {//Otherwise, insert the new team
 		teams.push(new Team(ticket["assigned_team"],parseInt(ticket["time_to_resolve"]),
 			parseInt(ticket["customer_satisfaction_rating"])));
 	}
 }
 
+//Generate message HTML
 let out_table = "<html><head>"
 out_table += "<style>"
 out_table += "table, th, td { border: 1px solid black; border-collapse: collapse; text-align: left; padding: 5px;}"
@@ -11093,6 +11097,7 @@ for(team of teams) {
 
 out_table+="</table></body></html>"
 
+//Construct email structure
 const email_message = {
 	"Messages" :[{
 		"From": {Email: "stats@example.com", Name: "Performance Stats Department"},
@@ -11102,4 +11107,5 @@ const email_message = {
 	}]
 }
 
+//Output final email block
 console.log(JSON.stringify(email_message))
