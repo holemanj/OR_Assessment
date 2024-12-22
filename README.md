@@ -33,9 +33,10 @@ Using PowerShell, create a script that:
   I developed my solution on a linux workstation that allowed the execution of the javascript from the command line:
         js email_list.js
 
-  I have two solutions for this:
-  1.  email_list,js: I simply copy-pasted the data file into the top of the script, and wrote the processing code below it. Simple and straight-forware
+  I have three solutions for this:
+  1.  email_list.js: I simply copy-pasted the data file into the top of the script, and wrote the processing code below it. Simple and straight-forware
   2.  read_from_file.js: This leverages the fs library from node.js to allow the external data file to be accessed directly. This make for a much smaller script code, implements a separation of concerns (data from the processing), and is a step along the way toward being reusable.
+  3.  Typescript_solution directory: I have never actually used Typescript before, and this seemed a good time to expose myself to it (if that phrase made you giggle a little bit, there's a good chance we can be friends). I'm not sure I have the syntax 100% correct, but the typescript compiler did produce a valid JS (in the build sub-directory), which appears to be producing good result.  The code is based off email_list.js above.
 
   <h3>For exercise 2</h3>
   I have used Powershell for work in the past, I'm far from being a specialist. While my solution produces the required result (output.csv in the folder), I am not convinced it's particularly efficient. Any pointers toward making it more efficient are appreciated.
